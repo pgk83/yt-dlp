@@ -1,0 +1,27 @@
+name: Security & Compliance Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  compliance-audit:
+    name: Run Compliance & Vulnerability Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Compliance Auditor
+        run: |
+          python3 .github/scripts/compliance_checker.py --dir . --markdown compliance_report.md || true
